@@ -65,7 +65,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | **W(Wide)DR dB Rating** | ❌ Not published | ❌ Not published | ❌ Not published | ❌ Not published | ~120dB (inferred) | ~120dB+ (AI-enhanced) |
 | **3D-DNR (Digital Noise Reduction)** | Hardware | Limited | Hardware + NPU assist | Hardware | Hardware + AI-enhanced | Hardware + AI-enhanced |
 | **AI-Enhanced ISP (AISP)** | ❌ No | ❌ No | ⚠️ Partial (NPU denoising) | ❌ No | ✅ **Yes (differentiator)** | ✅ **Yes** |
-| **LDC (Lens Distortion Corr)** | Hardware | Limited | Yes | Hardware | Hardware | Hardware |
+| **LDC (Lens Distortion Corr)** | Hardware | Limited | Hardware | Hardware | Hardware | Hardware |
 | **360°/Fisheye Dewarp** | Hardware | No | Limited | Hardware (S6LM) | Hardware (16MP fisheye) | Hardware |
 | **Multi-Camera Inputs** | 2x MIPI CSI-2 (4-lane) | 1x MIPI CSI-2 | 2x MIPI CSI-2 (8 virtual) | 2–3x | Multiple (4+ streams) | Multiple (4+ streams) |
 | **For MVP WDR 120dB?** | ⚠️ Unvalidated | ❌ Fails | ⚠️ Unvalidated | ⚠️ Unvalidated | ✅ Purpose-built | ✅ Exceeds |
@@ -82,7 +82,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | **H.265 (HEVC)** | ✅ Hardware | ✅ Limited | ✅ Hardware | ✅ Hardware | ✅ HEVC MP L6.1 | ✅ Hardware |
 | **H.264 (AVC)** | ✅ Hardware | ✅ Limited | ✅ Hardware | ✅ Hardware | ✅ AVC MP/HP | ✅ Hardware |
 | **MJPEG** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Max Encode Resolution** | ❌ **1080p60** | ❌ **No HW encode** | ✅ **4K30** | ✅ **4KP30** | ✅ **4KP60** | ✅ **4KP240 / 8KP30** |
+| **Max Encode Resolution (Concurrent)** | ❌ **1080p60** | ❌ **No HW encode** | ✅ **4K30** | ✅ **4KP30** | ✅ **4KP60** | ✅ **4KP240 / 8KP30** |
 | **vs MVP 5MP@30fps** | ❌ Below requirement | ❌ Fails completely | ✅ Meets | ✅ Meets | ✅ Exceeds | ✅ Far exceeds |
 | **Smart Codec (AI bitrate)** | ❌ No native | ❌ No | ⚠️ Partial (NPU assist) | ✅ SmartHEVC/AVC (S6LM) | ✅ Native | ✅ Native |
 | **Multi-stream Concurrent** | ⚠️ 2–3 borderline | ❌ Limited | ✅ 3–4 | ✅ 3+ | ✅ **4x 5MP30 native** | ✅ **4+ 4KP30** |
