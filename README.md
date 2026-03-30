@@ -118,9 +118,6 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 > **✅ AISP Joint Pipeline (CV72S / CV7):** Ambarella's NPU runs **inside** the ISP pipeline as an active feedback loop. As each frame is being processed, the neural network simultaneously adjusts HDR tone mapping, 3D-DNR aggressiveness, and night colour rendering on a frame-by-frame basis — the AI directly controls ISP parameters in real-time. This produces measurably better low-light colour, cleaner noise reduction under motion, and more natural HDR output compared to a fixed-algorithm ISP.
 
 
-Here is a tightened version that keeps all the key information but cuts the word count significantly:
-
-***
 
 ### 3.5 YOLO Object Detection Pipeline
 
