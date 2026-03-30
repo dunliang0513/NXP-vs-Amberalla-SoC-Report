@@ -118,6 +118,34 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 > **✅ AISP Joint Pipeline (CV72S / CV7):** Ambarella's NPU runs **inside** the ISP pipeline as an active feedback loop. As each frame is being processed, the neural network simultaneously adjusts HDR tone mapping, 3D-DNR aggressiveness, and night colour rendering on a frame-by-frame basis — the AI directly controls ISP parameters in real-time. This produces measurably better low-light colour, cleaner noise reduction under motion, and more natural HDR output compared to a fixed-algorithm ISP.
 
 
+Here is a tightened version that keeps all the key information but cuts the word count significantly:
+
+***
+
+### 3.5 YOLO Object Detection Pipeline
+
+The critical difference between NXP and Ambarella is **who handles each stage of the pipeline** — dedicated hardware or the ARM CPU:
+
+| Stage | NXP i.MX95 + Hailo-8 | Ambarella CV72S |
+|---|---|---|
+| **Pre-processing** (resize, normalise, format convert) | ⚠️ ARM CPU | ✔️ Hardware scaler — zero CPU |
+| **Inference** (YOLO forward pass) | ✔️ Hailo-8 via PCIe (26 TOPS) | ✔️ CVflow 3.0 on-chip |
+| **Post-processing** (NMS, bounding box decode) | ⚠️ ARM CPU via ONNX runtime | ✔️ CVflow DSP — zero CPU |
+
+> ⚠️ **Hailo-8 NMS note:** NMS is not executed on the Hailo chip. The model is compiled with the NMS layer removed, and NMS runs on the ARM CPU continuously — meaning the CPU is never fully idle during inference.
+
+### What This Means in Practice
+
+| Metric | NXP i.MX95 + Hailo-8 | Ambarella CV72S |
+|---|---|---|
+| **CPU role during YOLO** | Active — pre + post-processing | Supervisor only — receives final metadata |
+| **Inference throughput** | ~490 FPS (YOLOv8s, Hailo-8) | Native, concurrent with ISP |
+| **AISP + YOLO concurrent** | ❌ No AISP available | ✔️ Yes — on same chip |
+| **Smart codec concurrent** | ⚠️ Custom build required | ✔️ Native SmartHEVC |
+| **Total system power** | ~8–10W (i.MX95 + Hailo-8) | <3W (full pipeline, single chip) |
+
+Both platforms comfortably meet the MVP's 30fps YOLO requirement — Hailo-8 has ~490 FPS headroom on YOLOv8s. The real gap is **power** and **concurrent workload capacity**: Ambarella runs AISP + YOLO + smart codec + tracking simultaneously under 3W on a single chip, while NXP keeps the CPU involved throughout the pipeline and draws 3–4× more power at system level.
+
 ---
 
 ## 4. VIDEO STREAMING & PROTOCOL ARCHITECTURE
