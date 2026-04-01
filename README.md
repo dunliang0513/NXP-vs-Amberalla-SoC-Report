@@ -48,7 +48,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | **Security — Access & Authentication** | EAL4 + AVA_VAN.5; CSA Cybersecurity Labelling Scheme (CLS) Level 4; TPM / vTPM or equivalent; 802.1X (EAP-TLS, EAP-LEAP, EAP-MD5); HTTPS client authentication; HTTPS encryption; IP address filter; watermark; basic and digest authentication for HTTP/HTTPS; WSSE and digest authentication for ONVIF; RTP/RTSP over HTTPS; Control Timeout Settings; Security Audit Log; TLS 1.2 / TLS 1.3; AES-128/256 |
 | **Security — Cryptography** | **Encryption:** AES-GCM, minimum 256-bit key · **Format-Preserving Encryption:** FF1 or FF3-1 under AES · **Public Key:** ECC P-384 & P-521; RSA 2048-bit & 4096-bit · **Digital Signature:** ECDSA P-384 & P-521; RSA-PSS ≥2048-bit · **Key Exchange:** ECDHE with secp256r1, secp384r1, secp521r1 (Perfect Forward Secrecy in TLS) · **Hashing:** SHA-2 ≥384-bit digest; SHA-3 ≥256-bit digest · **FIPS 140 Level 3** or higher with tamper-resistant feature · **Certificates:** X.509 v3 (RFC 5280) · **IPSec** support |
 
-> ⚠️ **140dB WDR Note:** The 140dB WDR requirement is among the most demanding in the industry. Ambarella CV72S is purpose-built for security cameras and inferred to achieve approximately 120dB — this falls short of the 140dB requirement. **Both NXP and Ambarella must be validated through controlled hardware testing.** This may require premium sensor selection and extensive ISP tuning on either platform.
+> ⚠️ **140dB WDR Note:** The 140dB WDR requirement is among the most demanding in the industry. **Both NXP and Ambarella must be validated through controlled hardware testing.** This may require premium sensor selection and extensive ISP tuning on either platform.
 
 ---
 
@@ -71,7 +71,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | ISP Type                      | Dual hardware ISP      | Hardware ISP (new gen)     | Full HW ISP + AISP      | Full HW ISP + AISP      |
 | Max Sensor Resolution         | 12MP (4000x3000)                   | 12MP (4000x3000)                      | 16MP (4656x3492)                    | 33MP (7680x4320)         |
 | Max FPS @ 4K (8MP)            | 45fps                 | 60fps                     | 60fps                   | 240fps                  |
-| HDR Processing                | 3-exposure fusion      | 2-exposure, 20-bit         | Multi-exp       | AI-enhanced HDR         |
+| HDR Processing                | 3-exposure fusion      | 3-exposure  | Multi-exp       | AI-enhanced HDR         |
 | WDR dB Rating (vs 140dB req.) | ❌ Not published        | ❌ Not published            | ❌ Not published  | ❌ Not published |
 | 3D-DNR                        | Hardware               | Hardware      | Hardware + AI-enhanced  | Hardware + AI-enhanced  |
 | AI-Enhanced ISP (AISP)        | ❌ No                   | ⚠️ Partial (NPU denoising) | ✅ Yes  | ✅ Yes                  |
@@ -93,10 +93,9 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | Hardware                           | ✔️ Hardware              | ✔️ Hardware             | ✔️ Hardware           | ✔️ Hardware                        |
 | MJPEG                                 | ✔️                       | ✔️                      | ✔️                     | ✔️                                 |
 | Max Encode Resolution (single stream) | ❌ 1080p (~2MP) @ 60fps   | ✔️ 4K (~8MP) @ 60fps    | ✔️ 4K (~8MP) @ 60fps   | ✔️ 4K (~8MP) @ 240fps  |
-| vs MVP (5MP @ 30fps)                  | ❌ Below requirement      | ✔️ Meets                | ✔️ Exceeds             | ✔️ Far exceeds                     |
 | Smart Codec (AI bitrate)              | ❌ No native              | ⚠️ Partial (NPU assist) | ✔️ Native              | ✔️ Native                          |
 | Max Concurrent Streams                | 2 streams @ 1080p (~2MP) | 4 streams @ 1080p (~2MP) / 2 streams @ 4K (~8MP)    | 4 streams @ 5MP  | 4 streams @ 4K (~8MP)              |
-| Meets MVP (3 streams @ 5MP)?          | ❌ No                     |  Unvalidated                  | ✔️ Yes                 | ✔️ Exceeds                         |
+| Meets MVP (3 streams @ 5MP)?          | ❌ No                     |  ✔️ Yes                  | ✔️ Yes                 | ✔️ Exceeds                         |
 > **⚠️ Smart Codec (Partial)**: Architecturally possible via NPU→VPU pipeline, but requires full custom implementation — not provided by NXP out of the box.
 
 **Critical Encoding Gap (i.MX8M Plus Only):** The i.MX8M Plus VPU hard caps at 1080p60. Your MVP requires 5MP @ 30fps hardware encoding. To use the i.MX8M Plus, you must either downscale the sensor or add an external encoder to the BOM. **i.MX95 resolves the encoding gap with native 4Kp60 H.265 support.**
@@ -141,7 +140,7 @@ The critical difference between NXP and Ambarella is **who handles each stage of
 | **Smart codec concurrent** | ⚠️ Custom build required | ✔️ Native SmartHEVC |
 | **Total system power** | ~8–10W (i.MX95 + Hailo-8) | <3W (full pipeline, single chip) |
 
-Both platforms comfortably meet the MVP's 30fps YOLO requirement — Hailo-8 has ~490 FPS headroom on YOLOv8s. The real gap is **power** and **concurrent workload capacity**: Ambarella runs AISP + YOLO + smart codec + tracking simultaneously under 3W on a single chip, while NXP keeps the CPU involved throughout the pipeline and draws 3–4× more power at system level.
+> Both platforms comfortably meet the MVP's 30fps YOLO requirement — Hailo-8 has ~490 FPS headroom on YOLOv8s. The real gap is **power** and **concurrent workload capacity**: Ambarella runs AISP + YOLO + smart codec + tracking simultaneously under 3W on a single chip, while NXP keeps the CPU involved throughout the pipeline and draws 3–4× more power at system level.
 
 ---
 
@@ -332,7 +331,7 @@ The following components must all be completed before a production-ready camera 
 
 **Hardware & ISP Layer:**
 - ISP tuning (per sensor selection)
-- WDR 140dB validation campaign (sensor + optics + ISP combination)
+- WDR 140dB validation testing (sensor + optics + ISP combination)
 
 **Encoding & Streaming Layer:**
 - Multi-stream pipeline (GStreamer orchestration)
@@ -353,7 +352,7 @@ The following components must all be completed before a production-ready camera 
 - EAL4 + AVA_VAN.5 Common Criteria certification
 - CSA Cybersecurity Labelling Scheme (CLS) Level 4 certification
 
-**Overall:** Building this on NXP i.MX95 + external AI chip represents a **substantial multi-month engineering investment** across hardware, firmware, and certification workstreams — significantly more than the equivalent on Ambarella's camera-optimised SDK.
+**Overall:** Building this on NXP i.MX95 + external AI chip represents a **substantial multi-phase engineering investment** across hardware, firmware, and certification workstreams — significantly more than the equivalent on Ambarella's camera-optimised SDK.
 
 ---
 
@@ -378,7 +377,7 @@ These are architectural or silicon limitations that firmware cannot solve:
 - **Ambarella CV72S WDR dB rating is not disclosed — no published or independently tested figure exists; cannot be confirmed above or below the 140dB MVP requirement**
 - **Neither platform ships with a validated 140dB design**
 - **Must validate through hardware testing** — no firmware fix if the sensor/optics combination falls short
-- **Solution:** Premium sensor selection (e.g. Sony Starvis 2 class), large aperture optics, and extended ISP HDR tuning on either platform; consider third-party WDR validation lab
+- **Solution:** Premium sensor selection, large aperture optics, and extended ISP HDR tuning on either platform; consider third-party WDR validation lab
 - **Impact:** Risk in competitive tenders if 140dB cannot be demonstrated; applies equally to NXP and Ambarella builds
 
 ### Gap 4: No Native Smart Codec
@@ -412,20 +411,14 @@ These are architectural or silicon limitations that firmware cannot solve:
 - ❌ **Native smart codec** — Can build custom but cannot match Ambarella's tuned algorithms without extensive R&D
 - ❌ **Guaranteed 140dB WDR** — No published spec on any platform; only achievable through dedicated hardware validation
 
-### End-to-End Timeline
-
-- **MVP functional prototype:** Substantial engineering effort required across multiple workstreams
-- **ONVIF conformance certified:** Additional validation and testing phase after firmware completion
-- **Security certifications (EAL4+, CSA CLS Level 4):** Dedicated certification phase; must be planned independently of firmware delivery
-
 ---
 
 ## 9. STRATEGIC RECOMMENDATIONS
 
-### For i.MX8M Plus
+### A. For i.MX8M Plus
 ❌ **Not recommended** — VPU encode ceiling at 1080p60 is a hard blocker for 5MP MVP. The effort to work around (external encoder) adds cost and complexity.
 
-### For i.MX95 (Recommended NXP Path)
+### B. For i.MX95 (Recommended NXP Path)
 ✅ **Viable if willing to invest substantial firmware engineering effort**
 - 4Kp60 H.265/H.264 encode removes the VPU blocker
 - i.MX95 ISP is improved but 140dB WDR remains unconfirmed — budget a dedicated validation campaign
@@ -433,14 +426,14 @@ These are architectural or silicon limitations that firmware cannot solve:
 - Use NXP EdgeLock as security differentiator in competitive positioning
 - ONVIF + OTA + multi-stream are all achievable through mature Linux/open-source tools
 
-### For Hailo-8 + i.MX95 Architecture
+### C. For Hailo-8 + i.MX95 Architecture
 ✅ **Solid choice for your use case**
 - Offloads AI entirely (20+ TOPS dedicated)
 - NXP handles ISP, encoding, streaming, ONVIF
 - Hailo mature SDK
 - Integration requires significant but achievable engineering effort
 
-### For Ambarella CV72S (Competitive Benchmark)
+### D. For Ambarella CV72S (Competitive Benchmark)
 ⚠️ **Will win on time-to-market** — camera-in-a-box approach, but:
 - **Also faces the 140dB WDR challenge** 
 - Proprietary SoC (locked into Ambarella ecosystem long-term)
@@ -479,21 +472,6 @@ These are architectural or silicon limitations that firmware cannot solve:
 
 ---
 
-## 11. QUICK DECISION MATRIX
-
-| Question | Answer | Impact |
-|---|---|---|
-| **Use i.MX8M Plus?** | ❌ No — VPU ceiling blocks 5MP | Hard blocker; must upgrade or add encoder |
-| **Use i.MX95?** | ✅ Yes — best NXP option | 4Kp60 encode, improved ISP, but substantial dev effort |
-| **Use external AI chip (Hailo)?** | ✅ Yes — smart choice | 26 TOPS, mature SDK, significant but manageable integration effort |
-| **Implement full ONVIF S/G/T/M?** | ✅ Yes — required for tenders | Significant effort; achievable with open-source tools |
-| **Build smart codec (AI bitrate)?** | ⚠️ Optional for MVP, strategic differentiator | Very high effort; competitive advantage but not MVP-blocking |
-| **Commission 140dB WDR validation?** | ✅ Yes — mandatory | Sensor/optics-dependent; applies to both NXP and Ambarella builds |
-| **Use NXP EdgeLock for security?** | ✅ Yes — differentiator | Minimal effort to enable; strong security story in bids |
-| **Pursue EAL4+ / CSA CLS Level 4?** | ✅ Yes — required for government procurement | Platform-independent certification; plan as a dedicated phase |
-| **Aim for production release?** | Achievable with focused team | Requires sequential completion of firmware, validation, and certification phases |
-
----
 
 ## Appendix A: Terminology Reference
 
