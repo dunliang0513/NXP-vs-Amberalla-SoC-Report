@@ -1,6 +1,6 @@
 # NXP vs Ambarella: Smart Camera SoC Report
 
-*Report generated: 25th March 2026*
+*Report generated: 1st April 2026*
 
 ---
 
@@ -122,19 +122,19 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 
 The critical difference between NXP and Ambarella is **who handles each stage of the pipeline** — dedicated hardware or the ARM CPU:
 
-| Stage | NXP i.MX95 + Hailo-8 | Ambarella CV72S |
-|---|---|---|
-| **Pre-processing** (resize, normalise, format convert) | ⚠️ ARM CPU | ✔️ Hardware scaler — zero CPU |
-| **Inference** (YOLO forward pass) | ✔️ Hailo-8 via PCIe (26 TOPS) | ✔️ CVflow 3.0 on-chip |
-| **Post-processing** (NMS, bounding box decode) | ⚠️ ARM CPU via ONNX runtime | ✔️ CVflow DSP — zero CPU |
+| Stage                                              | NXP i.MX95 + Hailo-8          | Ambarella CV72S               |
+| -------------------------------------------------- | ----------------------------- | ----------------------------- |
+| Pre-processing (resize, normalise, format convert) | ⚠️ ARM CPU                    | ✔️ Hardware scaler — zero CPU |
+| Inference (YOLO forward pass)                      | ✔️ Hailo-8 via PCIe (26 TOPS) | ✔️ CVflow — zero CPU        |
+| Post-processing (NMS, bounding box decode)         | ⚠️ Model-dependent  | ✔️ CVflow  — zero CPU      |
 
-> ⚠️ **Hailo-8 NMS note:** NMS is not executed on the Hailo chip. The model is compiled with the NMS layer removed, and NMS runs on the ARM CPU continuously — meaning the CPU is never fully idle during inference.
+> ⚠️ **Model-dependent**: NMS execution depends on the model architecture used. For **Ultralytics YOLOv8 (official)**, NMS runs on-chip via Hailo's post-processing cluster, in this case the CPU post-processing load is minimal. For **DAMO-YOLO** and other unsupported architectures, the NMS layer is removed at compile time and falls back to the ARM CPU. 
 
 ### What This Means in Practice
 
 | Metric | NXP i.MX95 + Hailo-8 | Ambarella CV72S |
 |---|---|---|
-| **CPU role during YOLO** | Active — pre + post-processing | Supervisor only — receives final metadata |
+| **CPU role during YOLO** | Active — pre + post-processing (model dependent) | Supervisor only — receives final metadata |
 | **Inference throughput** | ~490 FPS (YOLOv8s, Hailo-8) | Native, concurrent with ISP |
 | **AISP + YOLO concurrent** | ❌ No AISP available | ✔️ Yes — on same chip |
 | **Smart codec concurrent** | ⚠️ Custom build required | ✔️ Native SmartHEVC |
