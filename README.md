@@ -58,7 +58,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 
 | Attribute | NXP i.MX8M Plus | NXP i.MX95 | Ambarella CV72S | Ambarella CV7 |
 |---|---|---|---|---|
-| **Release Year** | 2019 | 2023 | 2023 | 2026 |
+| **Release Year** | 2020 | 2024 | 2023 | 2026 |
 | **Process Node** | 14nm | 16nm | 5nm | 4nm |
 | **Primary Use Case** | Industrial IoT | Edge AI industrial | Smart cameras | 8K/multi-stream cameras |
 | **NDAA Compliant** | YES | YES | YES | YES |
@@ -70,18 +70,18 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 | ----------------------------- | ---------------------- | -------------------------- | ----------------------- | ----------------------- |
 | ISP Type                      | Dual hardware ISP      | Hardware ISP (new gen)     | Full HW ISP + AISP      | Full HW ISP + AISP      |
 | Max Sensor Resolution         | 12MP (4000x3000)                   | 12MP (4000x3000)                      | 16MP (4656x3492)                    | 33MP (7680x4320)         |
-| Max FPS @ 4K (8MP)            | 45fps                 | 50fps                     | 60fps                   | 240fps                  |
-| HDR Processing                | 3-exposure fusion      | 2-exposure, 20-bit         | Multi-exp + AI HDR      | AI-enhanced HDR         |
-| WDR dB Rating (vs 140dB req.) | ❌ Not published        | ❌ Not published            | ⚠️ ~120dB (below req.)  | ⚠️ ~120dB+ (below req.) |
+| Max FPS @ 4K (8MP)            | 45fps                 | 60fps                     | 60fps                   | 240fps                  |
+| HDR Processing                | 3-exposure fusion      | 2-exposure, 20-bit         | Multi-exp       | AI-enhanced HDR         |
+| WDR dB Rating (vs 140dB req.) | ❌ Not published        | ❌ Not published            | ❌ Not published  | ❌ Not published |
 | 3D-DNR                        | Hardware               | Hardware      | Hardware + AI-enhanced  | Hardware + AI-enhanced  |
 | AI-Enhanced ISP (AISP)        | ❌ No                   | ⚠️ Partial (NPU denoising) | ✅ Yes  | ✅ Yes                  |
 | LDC (Lens Distortion Corr.)   | Hardware               | Hardware                   | Hardware                | Hardware                |`
 | Max Simultaneous Camera Inputs @ 5MP (MVP res.) | 2 cameras | 4 cameras | 4 cameras | 4 cameras |
-| For MVP 140dB WDR?            | ❌ Unvalidated          | ❌ Unvalidated              | ⚠️ Likely below req.    | ⚠️ Likely below req.    |
+| For MVP 140dB WDR?            | ❌ Unvalidated          | ❌ Unvalidated              | ❌ Unvalidated    |  ❌ Unvalidated   |
 
 > ⚠️ Partial — NPU-assisted denoising is possible but requires self-implemented model and pipeline integration
 
-**Critical ISP Gap:** NXP does not publish WDR dB specifications. Ambarella ships with validated ISP tuning tools and reference designs, but the 140dB MVP requirement exceeds even Ambarella's inferred ~120dB capability. **Hardware testing is mandatory for both platforms. Software cannot compensate if the sensor/optics combination falls short.**
+**Critical ISP Gap:** Neither NXP nor Ambarella publishes WDR dB specifications for their SoCs. While Ambarella ships with validated ISP tuning tools and reference designs that offer more mature HDR pipelines, no confirmed dB figure exists for any of the evaluated chips. **Hardware testing is mandatory for all platforms. Software cannot compensate if the sensor/optics combination falls short.**
 
 **AISP Architectural Gap:** Ambarella's NPU actively drives the ISP in real time (AI → HDR tone mapping, noise reduction, night colour). NXP's ISP and NPU are completely separate. This cannot be patched in firmware — it is an architectural difference.
 
@@ -89,14 +89,14 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 
 | Encoding Attribute                    | i.MX8M Plus              | i.MX95                  | CV72S                  | CV7                                |
 | ------------------------------------- | ------------------------ | ----------------------- | ---------------------- | ---------------------------------- |
-| H.265 (HEVC)                          | ✔️ Hardware              | ✔️ Hardware             | ✔️ HEVC MP L6.1        | ✔️ Hardware                        |
-| H.264 (AVC)                           | ✔️ Hardware              | ✔️ Hardware             | ✔️ AVC MP/HP           | ✔️ Hardware                        |
+| H.265 (HEVC)                          | ✔️ Hardware              | ✔️ Hardware             | ✔️ Hardware        | ✔️ Hardware                        |
+| Hardware                           | ✔️ Hardware              | ✔️ Hardware             | ✔️ Hardware           | ✔️ Hardware                        |
 | MJPEG                                 | ✔️                       | ✔️                      | ✔️                     | ✔️                                 |
-| Max Encode Resolution (single stream) | ❌ 1080p (~2MP) @ 60fps   | ✔️ 4K (~8MP) @ 30fps    | ✔️ 4K (~8MP) @ 60fps   | ✔️ 4K (~8MP) @ 240fps / 8K @ 30fps |
+| Max Encode Resolution (single stream) | ❌ 1080p (~2MP) @ 60fps   | ✔️ 4K (~8MP) @ 60fps    | ✔️ 4K (~8MP) @ 60fps   | ✔️ 4K (~8MP) @ 240fps  |
 | vs MVP (5MP @ 30fps)                  | ❌ Below requirement      | ✔️ Meets                | ✔️ Exceeds             | ✔️ Far exceeds                     |
 | Smart Codec (AI bitrate)              | ❌ No native              | ⚠️ Partial (NPU assist) | ✔️ Native              | ✔️ Native                          |
-| Max Concurrent Streams                | 2 streams @ 1080p (~2MP) | 4 streams @ 5MP    | 4 streams @ 5MP  | 4 streams @ 4K (~8MP)              |
-| Meets MVP (3 streams @ 5MP)?          | ❌ No                     | ✔️ Yes                  | ✔️ Yes                 | ✔️ Exceeds                         |
+| Max Concurrent Streams                | 2 streams @ 1080p (~2MP) | 4 streams @ 1080p (~2MP) / 2 streams @ 4K (~8MP)    | 4 streams @ 5MP  | 4 streams @ 4K (~8MP)              |
+| Meets MVP (3 streams @ 5MP)?          | ❌ No                     |  Unvalidated                  | ✔️ Yes                 | ✔️ Exceeds                         |
 > **⚠️ Smart Codec (Partial)**: Architecturally possible via NPU→VPU pipeline, but requires full custom implementation — not provided by NXP out of the box.
 
 **Critical Encoding Gap (i.MX8M Plus Only):** The i.MX8M Plus VPU hard caps at 1080p60. Your MVP requires 5MP @ 30fps hardware encoding. To use the i.MX8M Plus, you must either downscale the sensor or add an external encoder to the BOM. **i.MX95 resolves the encoding gap with native 4Kp60 H.265 support.**
@@ -105,7 +105,7 @@ Your compliance burden is **BOM-level traceability** to confirm no prohibited co
 
 | NPU Attribute | i.MX8M Plus | i.MX95 | CV72S | CV7 |
 |---|---|---|---|---|
-| **Dedicated NPU** | ✅ 2.3 TOPS (eIQ) | ✅ 2.0 TOPS (Neutron) | ✅ ~4–6 TOPS CVflow 3.0 | ✅ 2.5× CV5 TOPS |
+| **Dedicated NPU** | ✅ 2.3 TOPS (eIQ) | ✅ 2.0 TOPS (Neutron) | ✅ ~4–6 TOPS CVflow 3.0 | ✅ >2.5× CV5 (absolute TOPS not disclosed) |
 | **vs MVP NPU requirement** | ✅ Meets | ✅ Meets | ✅ Exceeds 2–3× | ✅ Exceeds |
 | **CNN/Deep Learning** | ✅ TensorFlow Lite, ONNX | ✅ TensorFlow, ONNX | ✅ ONNX, TF, PyTorch, Caffe | ✅ ONNX, TF, PyTorch |
 | **Transformer/VLM** | ⚠️ Limited | ⚠️ Limited | ✅ Yes | ✅ Full support |
@@ -159,10 +159,10 @@ Your MVP requires **minimum 3 concurrent streams**:
 
 | Platform    | Capability                | Notes                                                                                        |
 | ----------- | ------------------------- | -------------------------------------------------------------------------------------------- |
-| i.MX8M Plus | ❌ 2 streams @ 1080p (~2MP)       | Hard VPU ceiling at 1080p — cannot encode 5MP at all; fails MVP requirement                  |
-| i.MX95      | ✔️ 4 streams @ 5MP  | Sufficient headroom for main 5MP H.265 + sub 720p H.264 + metadata, with one stream to spare |
-| CV72S       | ✔️ 4 streams @ 5MP | Native multi-stream; can also run 1× 4K60 single stream if needed                            |
-| CV7         | ✔️ 4 streams @ 4K (~8MP)  | Each stream independently at full 4K; far exceeds MVP requirement                            |
+| i.MX8M Plus |  2 streams @ 1080p (~2MP)       | ❌ Hard VPU ceiling at 1080p — cannot encode 5MP at all; fails MVP requirement                  |
+| i.MX95      |  4 streams @ 1080p (~2MP) / 2 streams @ 4K (~8MP)  | ✔️  1× 5MP H.265 + 1× 720p H.264 + metadata fits within VPU concurrent encode budget (4K30P concurrent envelope — 5MP @ 30fps well below ceiling). ISP pixel throughput: ~174 of 475 MPixel/s ISP budget used.  |
+| CV72S       |  4 streams @ 5MP | ✔️ Native multi-stream; can also run 1× 4K60 single stream if needed                            |
+| CV7         |  4 streams @ 4K (~8MP)  | ✔️ Each stream independently at full 4K; far exceeds MVP requirement                            |
 
 ### 4.2 Streaming Protocols
 
@@ -225,9 +225,9 @@ Your MVP requires all four ONVIF profiles: S, G, T, M.
 
 | Aspect | NXP i.MX | Ambarella |
 |---|---|---|
-| **What it does** | AI analyses each frame, allocates high bitrate to humans/vehicles, low bitrate to static backgrounds | SmartAVC/SmartHEVC native in encoder |
-| **Savings** | Target 30–50% bandwidth reduction | 30–50% bandwidth reduction (proven in field) |
-| **On NXP** | Must build custom: frame analyser → NPU/external AI chip → dynamic QP feedback to encoder | Included in SDK |
+| **What it does** | AI analyses each frame, allocates high bitrate to humans/vehicles, low bitrate to static backgrounds | SmartAVC™/SmartHEVC™ native in encoder — optimises bitrate per scene type for surveillance |
+| **Savings** | Target 30–50% bandwidth reduction |  Ambarella describes it as "radically reducing bitrates" but does not publish a specific % in official spec sheets |
+| **On NXP** | Must build custom: frame analyser → NPU/external AI chip → dynamic QP feedback to encoder | Included in SDK — confirmed across S2L, S3L, S5, CV28M, and CVflow lineup |
 | **Development Effort** | **Very high effort** (requires AI model training for scene analysis) | Zero (built-in) |
 
 ### 5.3 Multi-Stream Pipeline & Rate Control
@@ -375,7 +375,7 @@ These are architectural or silicon limitations that firmware cannot solve:
 
 ### Gap 3: 140dB WDR — Not Validated on Any Platform
 - **NXP does not publish WDR dB specifications** for i.MX8M Plus or i.MX95
-- **Ambarella CV72S is inferred at ~120dB — below the 140dB MVP requirement**
+- **Ambarella CV72S WDR dB rating is not disclosed — no published or independently tested figure exists; cannot be confirmed above or below the 140dB MVP requirement**
 - **Neither platform ships with a validated 140dB design**
 - **Must validate through hardware testing** — no firmware fix if the sensor/optics combination falls short
 - **Solution:** Premium sensor selection (e.g. Sony Starvis 2 class), large aperture optics, and extended ISP HDR tuning on either platform; consider third-party WDR validation lab
@@ -437,15 +437,14 @@ These are architectural or silicon limitations that firmware cannot solve:
 ✅ **Solid choice for your use case**
 - Offloads AI entirely (20+ TOPS dedicated)
 - NXP handles ISP, encoding, streaming, ONVIF
-- Hailo mature SDK, good documentation
+- Hailo mature SDK
 - Integration requires significant but achievable engineering effort
 
 ### For Ambarella CV72S (Competitive Benchmark)
 ⚠️ **Will win on time-to-market** — camera-in-a-box approach, but:
-- **Also faces the 140dB WDR challenge** — inferred ~120dB spec falls short of MVP requirement
+- **Also faces the 140dB WDR challenge** 
 - Proprietary SoC (locked into Ambarella ecosystem long-term)
 - More expensive than NXP general-purpose chips
-- Less security customisation flexibility than NXP EdgeLock story
 
 ---
 
